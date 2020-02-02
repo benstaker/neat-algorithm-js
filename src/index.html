@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <style>
+            body {
+                margin: 0;
+            }
+
+            .header {
+                height: 10vh;
+                width: 100vw;
+            }
+
+            .outputs {
+                display: flex;
+                font-size: 10px;
+                height: 90vh;
+                overflow: hidden;
+                width: 100vw;
+            }
+
+           #output-left,
+           #output-right {
+                height: 100%;
+                overflow: scroll;
+                width: 50%;
+           }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div>
+                <div id="iterations">
+                    <strong>Iterations:</strong>
+                    <span></span>
+                </div>
+            </div>
+            <div>
+                <button onclick="start()">Start</button>
+                <button onclick="stop()">Stop</button>
+                <button onclick="mutate()">Mutate</button>
+                <button onclick="addConnection()">Add Connection</button>
+            </div>
+        </div>
+
+        <div class="outputs">
+            <pre id="output-left"></pre>
+            <pre id="output-right"></pre>
+        </div>
+
+
+        <script type="module" src="index.js"></script>
+    </body>
+</html>

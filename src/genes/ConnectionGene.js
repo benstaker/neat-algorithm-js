@@ -1,44 +1,14 @@
-import Gene from './Gene';
-import Neat from '../neat/Neat';
+import Gene from './Gene.js';
+import Neat from '../neat/Neat.js';
 
 export default class ConnectionGene extends Gene {
 	constructor(from, to) {
         super();
 
         this.from = from;
-		this.to = to;
-	}
-
-	getFrom() {
-		return this.from;
-	}
-
-	setFrom(from) {
-		this.from = from;
-	}
-
-	getTo() {
-		return this.to;
-	}
-
-	setTo(to) {
-		this.to = to;
-	}
-
-	getWeight() {
-		return this.weight;
-	}
-
-	setWeight(weight) {
-		this.weight = weight;
-	}
-
-	isEnabled() {
-		return this.enabled;
-	}
-
-	setEnabled(enabled) {
-		this.enabled = enabled;
+        this.to = to;
+        this.enabled = null;
+        this.weight = null;
 	}
 
 	equals(other) {
@@ -46,19 +16,29 @@ export default class ConnectionGene extends Gene {
 			return false;
 		}
 
-		return other.getFrom().equals(this.from) && other.getTo().equals(this.to);
+		return other.from.equals(this.from) && other.to.equals(this.to);
 	}
 
 	hashCode() {
-		return this.from.getInnovationNumber() * Neat.MAX_NODES + this.to.getInnovationNumber();
+		return this.from.innovationNumber * Neat.MAX_NODES + this.to.innovationNumber;
 	}
 
 	copy(original) {
 		const copy = new ConnectionGene(original.from, original.to);
 
-        copy.setEnabled(original.isEnabled());
-		copy.setWeight(original.getWeight());
+        copy.enabled = original.enabled;
+		copy.weight = original.weight;
 
         return copy;
-	}
+    }
+
+    output() {
+        return {
+            innovationNumber: this.innovationNumber,
+            to: this.to,
+            from: this.from,
+            enabled: this.enabled,
+            weight: this.weight
+        };
+    }
 }

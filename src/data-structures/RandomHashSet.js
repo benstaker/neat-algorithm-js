@@ -8,9 +8,13 @@ export default class RandomHashSet {
         return this.set.has(value);
     }
 
+    hasIndex(index) {
+        return typeof this.data[index] !== 'undefined';
+    }
+
     randomElement() {
         const randomIndex = Math.floor((Math.random() * this.data.length));
-        return this.data[randomIndex];
+        return this.get(randomIndex);
     }
 
     clear() {
@@ -29,8 +33,20 @@ export default class RandomHashSet {
         this.data.push(value);
     }
 
+    addSorted(value) {
+        for (let i = 0; i < this.size(); i++) {
+            if (value.innovationNumber < this.data[i].innovationNumber) {
+                this.set.add(value);
+                this.data.splice(i, 0, value);
+                return;
+            }
+        }
+
+        this.add(value);
+    }
+
     get(index) {
-        return this.data[index];
+        return this.data[index] || null;
     }
 
     getData() {
