@@ -7,9 +7,19 @@ export default class ConnectionGene extends Gene {
 
         this.from = from;
         this.to = to;
-        this.enabled = null;
-        this.weight = null;
-	}
+        this.enabled = false;
+        this.weight = 0;
+    }
+
+    static copy(original) {
+		const copy = new ConnectionGene(original.from, original.to);
+
+        copy.innovationNumber = original.innovationNumber;
+		copy.weight = original.weight;
+        copy.enabled = original.enabled;
+
+        return copy;
+    }
 
 	equals(other) {
 		if (!(other instanceof ConnectionGene)) {
@@ -22,15 +32,6 @@ export default class ConnectionGene extends Gene {
 	hashCode() {
 		return this.from.innovationNumber * Neat.MAX_NODES + this.to.innovationNumber;
 	}
-
-	copy(original) {
-		const copy = new ConnectionGene(original.from, original.to);
-
-        copy.enabled = original.enabled;
-		copy.weight = original.weight;
-
-        return copy;
-    }
 
     output() {
         return {

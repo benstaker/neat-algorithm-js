@@ -24,27 +24,47 @@
                 overflow: scroll;
                 width: 50%;
            }
+
+           #output-right-top,
+           #output-right-bottom {
+                height: 50%;
+                overflow: scroll;
+                width: 100%;
+           }
         </style>
     </head>
     <body>
         <div class="header">
             <div>
-                <div id="iterations">
+                <span id="iterations">
                     <strong>Iterations:</strong>
                     <span></span>
-                </div>
+                </span>
+                <span id="speed">
+                    <strong>Speed:</strong>
+                    <span></span>
+                </span>
             </div>
             <div>
                 <button onclick="start()">Start</button>
                 <button onclick="stop()">Stop</button>
-                <button onclick="mutate()">Mutate</button>
+                <button onclick="reset()">Reset</button>
+                <button onclick="slower()">Slower</button>
+                <button onclick="faster()">Faster</button>
+            </div>
+            <div>
                 <button onclick="addConnection()">Add Connection</button>
+                <button onclick="calculate()">Calculate</button>
+                <button onclick="mutate()">Mutate</button>
             </div>
         </div>
 
         <div class="outputs">
             <pre id="output-left"></pre>
-            <pre id="output-right"></pre>
+            <div id="output-right">
+                <pre id="output-right-top"></pre>
+                <pre id="output-right-bottom"></pre>
+            </div>
         </div>
 
 

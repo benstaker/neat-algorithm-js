@@ -7,24 +7,24 @@ export default class Neat {
     constructor(inputSize, outputSize, clients) {
         this.allConnections = new Map();
         this.allNodes = new RandomHashSet();
-
-        this.C1 = 1;
-        this.C2 = 1;
-        this.C3 = 1;
-
         this.reset(inputSize, outputSize, clients);
     }
 
     static get MAX_NODES() { return 100000; }
 
-    static get PROBABILITY_MUTATE_LINK() { return 0.4; }
-    static get PROBABILITY_MUTATE_NODE() { return 0.4; }
-    static get PROBABILITY_MUTATE_WEIGHT_SHIFT() { return 0.4; }
-    static get PROBABILITY_MUTATE_WEIGHT_RANDOM() { return 0.4; }
-    static get PROBABILITY_MUTATE_TOGGLE_LINK() { return 0.4; }
+    static get C1() { return 1; }
+    static get C2() { return 1; }
+    static get C3() { return 1; }
+    static get CP() { return 4; }
 
-    static get WEIGHT_RANDOM_STRENGTH() { return 1; }
     static get WEIGHT_SHIFT_STRENGTH() { return 0.3; }
+    static get WEIGHT_RANDOM_STRENGTH() { return 1; }
+
+    static get PROBABILITY_MUTATE_LINK() { return 0.01; }
+    static get PROBABILITY_MUTATE_NODE() { return 0.003; }
+    static get PROBABILITY_MUTATE_WEIGHT_SHIFT() { return 0.002; }
+    static get PROBABILITY_MUTATE_WEIGHT_RANDOM() { return 0.002; }
+    static get PROBABILITY_MUTATE_TOGGLE_LINK() { return 0; }
 
     reset(inputSize, outputSize, clients) {
 		this.clients = clients;
@@ -50,7 +50,7 @@ export default class Neat {
 		const genome = new Genome(this);
 
         for (let i = 0; i < (this.inputSize + this.outputSize); i++) {
-            genome.nodes.add(this.getNode());
+            genome.nodes.add(this.getNode(i));
 		}
 
         return genome;
@@ -72,14 +72,12 @@ export default class Neat {
         if (arguments.length === 1) {
             let connection = arguments[0];
 
-            connectionGene = new ConnectionGene(connection.from, connection.to);
-            connectionGene.weight = connection.weight;
-            connectionGene.enabled = connection.enabled;
+            connectionGene = ConnectionGene.copy(connection);
         } else if (arguments.length === 2) {
             let fromNode = arguments[0];
             let toNode = arguments[1];
 
-            const connectionGene = new ConnectionGene(fromNode, toNode);
+            connectionGene = new ConnectionGene(fromNode, toNode);
             const connectionExists = this.allConnections.has(connectionGene);
 
             let innovationNumber = connectionExists

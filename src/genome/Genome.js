@@ -1,3 +1,4 @@
+import Calculator from '../calculations/Calculator.js';
 import RandomHashSet from '../data-structures/RandomHashSet.js';
 import ConnectionGene from '../genes/ConnectionGene.js';
 import Neat from '../neat/Neat.js';
@@ -6,14 +7,72 @@ export default class Genome {
 	constructor(neat) {
         this.connections = new RandomHashSet();
 		this.nodes = new RandomHashSet();
-		this.neat = neat;
-	}
+        this.neat = neat;
+    }
+
+    static crossOver(gOne, gTwo) {
+        const neat = gOne.neat;
+        let genome = neat.createEmptyGenome();
+
+		let gOneIndex = 0;
+        let gOneItem = null;
+
+        let gTwoIndex = 0;
+        let gTwoItem = null;
+
+        while(gOneIndex < gOne.connections.length && gTwoIndex < gTwo.connections.length) {
+            gOneItem = gOne.connections.get(gOneIndex);
+            gTwoItem = gTwo.connections.get(gTwoIndex);
+
+            if (gOneItem.innovationNumber === gTwoItem.innovationNumber) {
+                // Similar gene
+                if (Math.random() > 0.5) {
+                    genome.connections.add(neat.getConnection(gOneItem));
+                } else {
+                    genome.connections.add(neat.getConnection(gTwoItem));
+                }
+
+                gOneIndex++;
+                gTwoIndex++;
+            } else if (gOneItem.innovationNumber > gTwoItem.innovationNumber) {
+                // Disjoint gene of Two
+                gTwoIndex++;
+            } else {
+                // Disjoint gene of One
+                genome.connections.add(neat.getConnection(gOneItem));
+                gOneIndex++;
+            }
+        }
+
+        // Add the remainding genes
+        while(gOneIndex < gOne.connections.length) {
+            genome.connections.add(neat.getConnection(gOneItem)); // TODO: Add gene of One
+            gOneIndex++;
+        }
+
+        // Add the nodes from the connections
+        genome.connections.getData().forEach(function (connection) {
+            genome.nodes.add(connection.from);
+            genome.nodes.add(connection.to);
+        });
+
+        return genome;
+    }
+
+    calculate(...inputs) {
+        this.calculator = new Calculator(this);
+        return this.calculator.calculate(...inputs);
+    }
 
 	distance(gTwo) {
         let gOne = this;
 
-        const gOneHighestInnovation = gOne.connections.get(gOne.connections.length - 1).innovationNumber;
-        const gTwoHighestInnovation = gTwo.connections.get(gTwo.connections.length - 1).innovationNumber;
+        const gOneHighestInnovation = gOne.connections.size()
+            ? gOne.connections.get(gOne.connections.length - 1).innovationNumber
+            : 0;
+        const gTwoHighestInnovation = gTwo.connections.size()
+            ? gTwo.connections.get(gTwo.connections.length - 1).innovationNumber
+            : 0;
 
         // Swap them around if g two is higher
         if (gOneHighestInnovation < gTwoHighestInnovation) {
@@ -68,55 +127,6 @@ export default class Genome {
             ((this.neat.C2 * disjointGenes) / N) +
             (this.neat.C3 * weightDifference)
         );
-	}
-
-	static crossOver(gOne, gTwo) {
-        const neat = gOne.neat;
-        let genome = neat.createEmptyGenome();
-
-		let gOneIndex = 0;
-        let gOneItem = null;
-
-        let gTwoIndex = 0;
-        let gTwoItem = null;
-
-        while(gOneIndex < gOne.connections.length && gTwoIndex < gTwo.connections.length) {
-            gOneItem = gOne.connections.get(gOneIndex);
-            gTwoItem = gTwo.connections.get(gTwoIndex);
-
-            if (gOneItem.innovationNumber === gTwoItem.innovationNumber) {
-                // Similar gene
-                if (Math.random() > 0.5) {
-                    genome.connections.add(neat.getConnection(gOneItem));
-                } else {
-                    genome.connections.add(neat.getConnection(gTwoItem));
-                }
-
-                gOneIndex++;
-                gTwoIndex++;
-            } else if (gOneItem.innovationNumber > gTwoItem.innovationNumber) {
-                // Disjoint gene of Two
-                gTwoIndex++;
-            } else {
-                // Disjoint gene of One
-                genome.connections.add(neat.getConnection(gOneItem));
-                gOneIndex++;
-            }
-        }
-
-        // Add the remainding genes
-        while(gOneIndex < gOne.connections.length) {
-            genome.connections.add(neat.getConnection(gOneItem)); // TODO: Add gene of One
-            gOneIndex++;
-        }
-
-        // Add the nodes from the connections
-        genome.connections.getData().forEach(function (connection) {
-            genome.nodes.add(connection.from);
-            genome.nodes.add(connection.to);
-        });
-
-        return genome;
 	}
 
 	mutate() {
@@ -223,8 +233,8 @@ export default class Genome {
 
     output() {
         return {
-            connections: this.connections,
-            nodes: this.nodes
+            connections: this.connections.data,
+            nodes: this.nodes.data
         };
     }
 }

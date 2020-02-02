@@ -4,8 +4,8 @@ export default class NodeGene extends Gene {
 	constructor(innovationNumber) {
         super(innovationNumber);
 
-        this.x = null;
-        this.y = null;
+        this.x = 0;
+        this.y = 0;
 	}
 
 	equals(other) {

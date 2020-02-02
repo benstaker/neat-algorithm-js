@@ -27,7 +27,7 @@ export default class RandomHashSet {
     }
 
     add(value) {
-        if (this.set.has(value)) return;
+        if (this.contains(value)) return;
 
         this.set.add(value);
         this.data.push(value);
@@ -49,7 +49,10 @@ export default class RandomHashSet {
         return this.data[index] || null;
     }
 
-    getData() {
-        return this.data;
+    remove(index) {
+        if (!this.hasIndex(index)) return;
+
+        const removedItem = this.data.splice(index, 1)[0];
+        this.set.remove(removedItem);
     }
 }
