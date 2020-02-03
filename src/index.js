@@ -50,15 +50,18 @@ window.start = function () {
         document.querySelector('#iterations span').innerHTML = iterations;
         document.querySelector('#speed span').innerHTML = speed;
 
-        genome.mutate();
-        genome.calculate(1, 1);
+        const hasMutated = genome.mutate();
 
-        output('left', genome.output());
-        output('right-top', neat.output());
-        output('right-bottom', {
-            inputNodes: genome.calculator.inputNodes,
-            outputNodes: genome.calculator.outputNodes
-        });
+        if (iterations === 1 || hasMutated) {
+            genome.calculate(1, 1);
+
+            output('left', genome.output());
+            output('right-top', neat.output());
+            output('right-bottom', {
+                inputNodes: genome.calculator.inputNodes,
+                outputNodes: genome.calculator.outputNodes
+            });
+        }
 
         iterations++;
     }, speed);
