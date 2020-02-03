@@ -130,21 +130,32 @@ export default class Genome {
 	}
 
 	mutate() {
-        if (Neat.PROBABILITY_MUTATE_LINK > Math.random()) {
-            this.mutateLink();
+        const statuses = {};
+
+        statuses.MUTATE_LINK = Neat.PROBABILITY_MUTATE_LINK > Math.random();
+        if (statuses.MUTATE_LINK) this.mutateLink();
+
+        statuses.MUTATE_NODE = Neat.PROBABILITY_MUTATE_NODE > Math.random();
+        if (statuses.MUTATE_NODE) this.mutateNode();
+
+        statuses.MUTATE_WEIGHT_SHIFT = Neat.PROBABILITY_MUTATE_WEIGHT_SHIFT > Math.random();
+        if (statuses.MUTATE_WEIGHT_SHIFT) this.mutateWeightShift();
+
+        statuses.MUTATE_WEIGHT_RANDOM = Neat.PROBABILITY_MUTATE_WEIGHT_RANDOM > Math.random();
+        if (statuses.MUTATE_WEIGHT_RANDOM) this.mutateWeightRandom();
+
+        statuses.MUTATE_TOGGLE_LINK = Neat.PROBABILITY_MUTATE_TOGGLE_LINK > Math.random();
+        if (statuses.MUTATE_TOGGLE_LINK) this.mutateLinkToggle();
+
+        // If any statuses are true, then we have mutated
+        const statusKeys = Object.keys(statuses);
+        for (let i = 0; i < statusKeys.length; i++) {
+            if (!statuses[statusKeys[i]]) continue;
+
+            return true;
         }
-        if (Neat.PROBABILITY_MUTATE_NODE > Math.random()) {
-            this.mutateNode();
-        }
-        if (Neat.PROBABILITY_MUTATE_WEIGHT_SHIFT > Math.random()) {
-            this.mutateWeightShift();
-        }
-        if (Neat.PROBABILITY_MUTATE_WEIGHT_RANDOM > Math.random()) {
-            this.mutateWeightRandom();
-        }
-        if (Neat.PROBABILITY_MUTATE_TOGGLE_LINK > Math.random()) {
-            this.mutateLinkToggle();
-        }
+
+        return false;
     }
 
     mutateLink() {
