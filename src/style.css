@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+}
+
+.header {
+    height: 10vh;
+    width: 100vw;
+}
+
+.outputs {
+    display: flex;
+    font-size: 10px;
+    height: 90vh;
+    overflow: hidden;
+    width: 100vw;
+}
+
+#output-left,
+#output-right {
+    height: 100%;
+    overflow: scroll;
+    width: 50%;
+}
+
+#output-right-top,
+#output-right-bottom {
+    height: 50%;
+    overflow: scroll;
+    width: 100%;
+}
